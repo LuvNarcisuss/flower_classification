@@ -1,0 +1,496 @@
+================================================================================
+花朵识别模型训练日志
+================================================================================
+
+1. 训练基本信息
+----------------------------------------
+开始时间: 2026-03-18 15:23:14
+结束时间: 2026-03-18 15:40:15
+训练时长: 0:17:00.957334
+训练设备: NVIDIA GeForce RTX 4050 Laptop GPU
+
+2. 数据集信息
+----------------------------------------
+类别数量: 102
+类别列表: c0, c1, c10, c100, c101, c11, c12, c13, c14, c15, c16, c17, c18, c19, c2, c20, c21, c22, c23, c24, c25, c26, c27, c28, c29, c3, c30, c31, c32, c33, c34, c35, c36, c37, c38, c39, c4, c40, c41, c42, c43, c44, c45, c46, c47, c48, c49, c5, c50, c51, c52, c53, c54, c55, c56, c57, c58, c59, c6, c60, c61, c62, c63, c64, c65, c66, c67, c68, c69, c7, c70, c71, c72, c73, c74, c75, c76, c77, c78, c79, c8, c80, c81, c82, c83, c84, c85, c86, c87, c88, c89, c9, c90, c91, c92, c93, c94, c95, c96, c97, c98, c99
+总图像数: 8189
+
+类别分布:
+  train/c0: 20 张图片
+  train/c1: 40 张图片
+  train/c10: 67 张图片
+  train/c100: 38 张图片
+  train/c101: 28 张图片
+  train/c11: 67 张图片
+  train/c12: 29 张图片
+  train/c13: 28 张图片
+  train/c14: 29 张图片
+  train/c15: 21 张图片
+  train/c16: 65 张图片
+  train/c17: 62 张图片
+  train/c18: 29 张图片
+  train/c19: 36 张图片
+  train/c2: 20 张图片
+  train/c20: 20 张图片
+  train/c21: 39 张图片
+  train/c22: 71 张图片
+  train/c23: 22 张图片
+  train/c24: 21 张图片
+  train/c25: 21 张图片
+  train/c26: 20 张图片
+  train/c27: 46 张图片
+  train/c28: 58 张图片
+  train/c29: 65 张图片
+  train/c3: 36 张图片
+  train/c30: 32 张图片
+  train/c31: 25 张图片
+  train/c32: 26 张图片
+  train/c33: 20 张图片
+  train/c34: 23 张图片
+  train/c35: 55 张图片
+  train/c36: 88 张图片
+  train/c37: 36 张图片
+  train/c38: 21 张图片
+  train/c39: 47 张图片
+  train/c4: 45 张图片
+  train/c40: 107 张图片
+  train/c41: 39 张图片
+  train/c42: 110 张图片
+  train/c43: 73 张图片
+  train/c44: 20 张图片
+  train/c45: 176 张图片
+  train/c46: 47 张图片
+  train/c47: 51 张图片
+  train/c48: 29 张图片
+  train/c49: 72 张图片
+  train/c5: 25 张图片
+  train/c50: 238 张图片
+  train/c51: 65 张图片
+  train/c52: 73 张图片
+  train/c53: 41 张图片
+  train/c54: 51 张图片
+  train/c55: 89 张图片
+  train/c56: 47 张图片
+  train/c57: 94 张图片
+  train/c58: 47 张图片
+  train/c59: 89 张图片
+  train/c6: 20 张图片
+  train/c60: 30 张图片
+  train/c61: 35 张图片
+  train/c62: 34 张图片
+  train/c63: 32 张图片
+  train/c64: 82 张图片
+  train/c65: 41 张图片
+  train/c66: 22 张图片
+  train/c67: 34 张图片
+  train/c68: 34 张图片
+  train/c69: 42 张图片
+  train/c7: 65 张图片
+  train/c70: 58 张图片
+  train/c71: 76 张图片
+  train/c72: 174 张图片
+  train/c73: 151 张图片
+  train/c74: 100 张图片
+  train/c75: 87 张图片
+  train/c76: 231 张图片
+  train/c77: 117 张图片
+  train/c78: 21 张图片
+  train/c79: 85 张图片
+  train/c8: 26 张图片
+  train/c80: 146 张图片
+  train/c81: 92 张图片
+  train/c82: 111 张图片
+  train/c83: 66 张图片
+  train/c84: 43 张图片
+  train/c85: 38 张图片
+  train/c86: 43 张图片
+  train/c87: 134 张图片
+  train/c88: 164 张图片
+  train/c89: 62 张图片
+  train/c9: 25 张图片
+  train/c90: 56 张图片
+  train/c91: 46 张图片
+  train/c92: 26 张图片
+  train/c93: 142 张图片
+  train/c94: 108 张图片
+  train/c95: 71 张图片
+  train/c96: 46 张图片
+  train/c97: 62 张图片
+  train/c98: 43 张图片
+  train/c99: 29 张图片
+  val/c0: 10 张图片
+  val/c1: 10 张图片
+  val/c10: 10 张图片
+  val/c100: 10 张图片
+  val/c101: 10 张图片
+  val/c11: 10 张图片
+  val/c12: 10 张图片
+  val/c13: 10 张图片
+  val/c14: 10 张图片
+  val/c15: 10 张图片
+  val/c16: 10 张图片
+  val/c17: 10 张图片
+  val/c18: 10 张图片
+  val/c19: 10 张图片
+  val/c2: 10 张图片
+  val/c20: 10 张图片
+  val/c21: 10 张图片
+  val/c22: 10 张图片
+  val/c23: 10 张图片
+  val/c24: 10 张图片
+  val/c25: 10 张图片
+  val/c26: 10 张图片
+  val/c27: 10 张图片
+  val/c28: 10 张图片
+  val/c29: 10 张图片
+  val/c3: 10 张图片
+  val/c30: 10 张图片
+  val/c31: 10 张图片
+  val/c32: 10 张图片
+  val/c33: 10 张图片
+  val/c34: 10 张图片
+  val/c35: 10 张图片
+  val/c36: 10 张图片
+  val/c37: 10 张图片
+  val/c38: 10 张图片
+  val/c39: 10 张图片
+  val/c4: 10 张图片
+  val/c40: 10 张图片
+  val/c41: 10 张图片
+  val/c42: 10 张图片
+  val/c43: 10 张图片
+  val/c44: 10 张图片
+  val/c45: 10 张图片
+  val/c46: 10 张图片
+  val/c47: 10 张图片
+  val/c48: 10 张图片
+  val/c49: 10 张图片
+  val/c5: 10 张图片
+  val/c50: 10 张图片
+  val/c51: 10 张图片
+  val/c52: 10 张图片
+  val/c53: 10 张图片
+  val/c54: 10 张图片
+  val/c55: 10 张图片
+  val/c56: 10 张图片
+  val/c57: 10 张图片
+  val/c58: 10 张图片
+  val/c59: 10 张图片
+  val/c6: 10 张图片
+  val/c60: 10 张图片
+  val/c61: 10 张图片
+  val/c62: 10 张图片
+  val/c63: 10 张图片
+  val/c64: 10 张图片
+  val/c65: 10 张图片
+  val/c66: 10 张图片
+  val/c67: 10 张图片
+  val/c68: 10 张图片
+  val/c69: 10 张图片
+  val/c7: 10 张图片
+  val/c70: 10 张图片
+  val/c71: 10 张图片
+  val/c72: 10 张图片
+  val/c73: 10 张图片
+  val/c74: 10 张图片
+  val/c75: 10 张图片
+  val/c76: 10 张图片
+  val/c77: 10 张图片
+  val/c78: 10 张图片
+  val/c79: 10 张图片
+  val/c8: 10 张图片
+  val/c80: 10 张图片
+  val/c81: 10 张图片
+  val/c82: 10 张图片
+  val/c83: 10 张图片
+  val/c84: 10 张图片
+  val/c85: 10 张图片
+  val/c86: 10 张图片
+  val/c87: 10 张图片
+  val/c88: 10 张图片
+  val/c89: 10 张图片
+  val/c9: 10 张图片
+  val/c90: 10 张图片
+  val/c91: 10 张图片
+  val/c92: 10 张图片
+  val/c93: 10 张图片
+  val/c94: 10 张图片
+  val/c95: 10 张图片
+  val/c96: 10 张图片
+  val/c97: 10 张图片
+  val/c98: 10 张图片
+  val/c99: 10 张图片
+  test/c0: 10 张图片
+  test/c1: 10 张图片
+  test/c10: 10 张图片
+  test/c100: 10 张图片
+  test/c101: 10 张图片
+  test/c11: 10 张图片
+  test/c12: 10 张图片
+  test/c13: 10 张图片
+  test/c14: 10 张图片
+  test/c15: 10 张图片
+  test/c16: 10 张图片
+  test/c17: 10 张图片
+  test/c18: 10 张图片
+  test/c19: 10 张图片
+  test/c2: 10 张图片
+  test/c20: 10 张图片
+  test/c21: 10 张图片
+  test/c22: 10 张图片
+  test/c23: 10 张图片
+  test/c24: 10 张图片
+  test/c25: 10 张图片
+  test/c26: 10 张图片
+  test/c27: 10 张图片
+  test/c28: 10 张图片
+  test/c29: 10 张图片
+  test/c3: 10 张图片
+  test/c30: 10 张图片
+  test/c31: 10 张图片
+  test/c32: 10 张图片
+  test/c33: 10 张图片
+  test/c34: 10 张图片
+  test/c35: 10 张图片
+  test/c36: 10 张图片
+  test/c37: 10 张图片
+  test/c38: 10 张图片
+  test/c39: 10 张图片
+  test/c4: 10 张图片
+  test/c40: 10 张图片
+  test/c41: 10 张图片
+  test/c42: 10 张图片
+  test/c43: 10 张图片
+  test/c44: 10 张图片
+  test/c45: 10 张图片
+  test/c46: 10 张图片
+  test/c47: 10 张图片
+  test/c48: 10 张图片
+  test/c49: 10 张图片
+  test/c5: 10 张图片
+  test/c50: 10 张图片
+  test/c51: 10 张图片
+  test/c52: 10 张图片
+  test/c53: 10 张图片
+  test/c54: 10 张图片
+  test/c55: 10 张图片
+  test/c56: 10 张图片
+  test/c57: 10 张图片
+  test/c58: 10 张图片
+  test/c59: 10 张图片
+  test/c6: 10 张图片
+  test/c60: 10 张图片
+  test/c61: 10 张图片
+  test/c62: 10 张图片
+  test/c63: 10 张图片
+  test/c64: 10 张图片
+  test/c65: 10 张图片
+  test/c66: 10 张图片
+  test/c67: 10 张图片
+  test/c68: 10 张图片
+  test/c69: 10 张图片
+  test/c7: 10 张图片
+  test/c70: 10 张图片
+  test/c71: 10 张图片
+  test/c72: 10 张图片
+  test/c73: 10 张图片
+  test/c74: 10 张图片
+  test/c75: 10 张图片
+  test/c76: 10 张图片
+  test/c77: 10 张图片
+  test/c78: 10 张图片
+  test/c79: 10 张图片
+  test/c8: 10 张图片
+  test/c80: 10 张图片
+  test/c81: 10 张图片
+  test/c82: 10 张图片
+  test/c83: 10 张图片
+  test/c84: 10 张图片
+  test/c85: 10 张图片
+  test/c86: 10 张图片
+  test/c87: 10 张图片
+  test/c88: 10 张图片
+  test/c89: 10 张图片
+  test/c9: 10 张图片
+  test/c90: 10 张图片
+  test/c91: 10 张图片
+  test/c92: 10 张图片
+  test/c93: 10 张图片
+  test/c94: 10 张图片
+  test/c95: 10 张图片
+  test/c96: 10 张图片
+  test/c97: 10 张图片
+  test/c98: 10 张图片
+  test/c99: 10 张图片
+
+3. 训练参数
+----------------------------------------
+data: D:\aelm\deeplearning\flower_classification\flower_photos_split
+epochs: 50
+batch: 16
+imgsz: 320
+device: NVIDIA GeForce RTX 4050 Laptop GPU
+amp: True
+project: flower_detection
+name: yolo26n_CBAM_flower_cls
+exist_ok: True
+task: classify
+classes: ['c0', 'c1', 'c10', 'c100', 'c101', 'c11', 'c12', 'c13', 'c14', 'c15', 'c16', 'c17', 'c18', 'c19', 'c2', 'c20', 'c21', 'c22', 'c23', 'c24', 'c25', 'c26', 'c27', 'c28', 'c29', 'c3', 'c30', 'c31', 'c32', 'c33', 'c34', 'c35', 'c36', 'c37', 'c38', 'c39', 'c4', 'c40', 'c41', 'c42', 'c43', 'c44', 'c45', 'c46', 'c47', 'c48', 'c49', 'c5', 'c50', 'c51', 'c52', 'c53', 'c54', 'c55', 'c56', 'c57', 'c58', 'c59', 'c6', 'c60', 'c61', 'c62', 'c63', 'c64', 'c65', 'c66', 'c67', 'c68', 'c69', 'c7', 'c70', 'c71', 'c72', 'c73', 'c74', 'c75', 'c76', 'c77', 'c78', 'c79', 'c8', 'c80', 'c81', 'c82', 'c83', 'c84', 'c85', 'c86', 'c87', 'c88', 'c89', 'c9', 'c90', 'c91', 'c92', 'c93', 'c94', 'c95', 'c96', 'c97', 'c98', 'c99']
+model_layers_info: [{'index': 0, 'name': 'ClassificationModel', 'module': 'ultralytics.nn.tasks', 'params': 1657296, 'stride': tensor([1.])}, {'index': 1, 'name': 'Sequential', 'module': 'torch.nn.modules.container', 'params': 1657296}, {'index': 2, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 448}, {'index': 3, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 448, 'in_channels': 3, 'out_channels': 16, 'kernel_size': (3, 3), 'stride': (2, 2)}, {'index': 4, 'name': 'SiLU', 'module': 'torch.nn.modules.activation', 'params': 0}, {'index': 5, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 4640}, {'index': 6, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 4640, 'in_channels': 16, 'out_channels': 32, 'kernel_size': (3, 3), 'stride': (2, 2)}, {'index': 7, 'name': 'C3k2', 'module': 'ultralytics.nn.modules.block', 'params': 6520}, {'index': 8, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 1056}, {'index': 9, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 1056, 'in_channels': 32, 'out_channels': 32, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 10, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 3136}, {'index': 11, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 3136, 'in_channels': 48, 'out_channels': 64, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 12, 'name': 'ModuleList', 'module': 'torch.nn.modules.container', 'params': 2328}, {'index': 13, 'name': 'Bottleneck', 'module': 'ultralytics.nn.modules.block', 'params': 2328}, {'index': 14, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 1160}, {'index': 15, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 1160, 'in_channels': 16, 'out_channels': 8, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 16, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 1168}, {'index': 17, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 1168, 'in_channels': 8, 'out_channels': 16, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 18, 'name': 'CBAM', 'module': 'ultralytics.nn.Attmodules.CBAM', 'params': 610}, {'index': 19, 'name': 'AdaptiveAvgPool2d', 'module': 'torch.nn.modules.pooling', 'params': 0}, {'index': 20, 'name': 'AdaptiveMaxPool2d', 'module': 'torch.nn.modules.pooling', 'params': 0}, {'index': 21, 'name': 'Sequential', 'module': 'torch.nn.modules.container', 'params': 512}, {'index': 22, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 256, 'in_channels': 64, 'out_channels': 4, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 23, 'name': 'ReLU', 'module': 'torch.nn.modules.activation', 'params': 0}, {'index': 24, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 256, 'in_channels': 4, 'out_channels': 64, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 25, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 98, 'in_channels': 2, 'out_channels': 1, 'kernel_size': (7, 7), 'stride': (1, 1)}, {'index': 26, 'name': 'Sigmoid', 'module': 'torch.nn.modules.activation', 'params': 0}, {'index': 27, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 36928}, {'index': 28, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 36928, 'in_channels': 64, 'out_channels': 64, 'kernel_size': (3, 3), 'stride': (2, 2)}, {'index': 29, 'name': 'C3k2', 'module': 'ultralytics.nn.modules.block', 'params': 25840}, {'index': 30, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 4160}, {'index': 31, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 4160, 'in_channels': 64, 'out_channels': 64, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 32, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 12416}, {'index': 33, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 12416, 'in_channels': 96, 'out_channels': 128, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 34, 'name': 'ModuleList', 'module': 'torch.nn.modules.container', 'params': 9264}, {'index': 35, 'name': 'Bottleneck', 'module': 'ultralytics.nn.modules.block', 'params': 9264}, {'index': 36, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 4624}, {'index': 37, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 4624, 'in_channels': 32, 'out_channels': 16, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 38, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 4640}, {'index': 39, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 4640, 'in_channels': 16, 'out_channels': 32, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 40, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 147584}, {'index': 41, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 147584, 'in_channels': 128, 'out_channels': 128, 'kernel_size': (3, 3), 'stride': (2, 2)}, {'index': 42, 'name': 'C3k2', 'module': 'ultralytics.nn.modules.block', 'params': 86528}, {'index': 43, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 16512}, {'index': 44, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 16512, 'in_channels': 128, 'out_channels': 128, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 45, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 24704}, {'index': 46, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 24704, 'in_channels': 192, 'out_channels': 128, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 47, 'name': 'ModuleList', 'module': 'torch.nn.modules.container', 'params': 45312}, {'index': 48, 'name': 'C3k', 'module': 'ultralytics.nn.modules.block', 'params': 45312}, {'index': 49, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 2080}, {'index': 50, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 2080, 'in_channels': 64, 'out_channels': 32, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 51, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 2080}, {'index': 52, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 2080, 'in_channels': 64, 'out_channels': 32, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 53, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 4160}, {'index': 54, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 4160, 'in_channels': 64, 'out_channels': 64, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 55, 'name': 'Sequential', 'module': 'torch.nn.modules.container', 'params': 36992}, {'index': 56, 'name': 'Bottleneck', 'module': 'ultralytics.nn.modules.block', 'params': 18496}, {'index': 57, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 9248}, {'index': 58, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 9248, 'in_channels': 32, 'out_channels': 32, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 59, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 9248}, {'index': 60, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 9248, 'in_channels': 32, 'out_channels': 32, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 61, 'name': 'Bottleneck', 'module': 'ultralytics.nn.modules.block', 'params': 18496}, {'index': 62, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 9248}, {'index': 63, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 9248, 'in_channels': 32, 'out_channels': 32, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 64, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 9248}, {'index': 65, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 9248, 'in_channels': 32, 'out_channels': 32, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 66, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 295168}, {'index': 67, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 295168, 'in_channels': 128, 'out_channels': 256, 'kernel_size': (3, 3), 'stride': (2, 2)}, {'index': 68, 'name': 'C3k2', 'module': 'ultralytics.nn.modules.block', 'params': 345088}, {'index': 69, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 65792}, {'index': 70, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 65792, 'in_channels': 256, 'out_channels': 256, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 71, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 98560}, {'index': 72, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 98560, 'in_channels': 384, 'out_channels': 256, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 73, 'name': 'ModuleList', 'module': 'torch.nn.modules.container', 'params': 180736}, {'index': 74, 'name': 'C3k', 'module': 'ultralytics.nn.modules.block', 'params': 180736}, {'index': 75, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 8256}, {'index': 76, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 8256, 'in_channels': 128, 'out_channels': 64, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 77, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 8256}, {'index': 78, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 8256, 'in_channels': 128, 'out_channels': 64, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 79, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 16512}, {'index': 80, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 16512, 'in_channels': 128, 'out_channels': 128, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 81, 'name': 'Sequential', 'module': 'torch.nn.modules.container', 'params': 147712}, {'index': 82, 'name': 'Bottleneck', 'module': 'ultralytics.nn.modules.block', 'params': 73856}, {'index': 83, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 36928}, {'index': 84, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 36928, 'in_channels': 64, 'out_channels': 64, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 85, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 36928}, {'index': 86, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 36928, 'in_channels': 64, 'out_channels': 64, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 87, 'name': 'Bottleneck', 'module': 'ultralytics.nn.modules.block', 'params': 73856}, {'index': 88, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 36928}, {'index': 89, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 36928, 'in_channels': 64, 'out_channels': 64, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 90, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 36928}, {'index': 91, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 36928, 'in_channels': 64, 'out_channels': 64, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 92, 'name': 'C2PSA', 'module': 'ultralytics.nn.modules.block', 'params': 248320}, {'index': 93, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 65792}, {'index': 94, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 65792, 'in_channels': 256, 'out_channels': 256, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 95, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 65792}, {'index': 96, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 65792, 'in_channels': 256, 'out_channels': 256, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 97, 'name': 'Sequential', 'module': 'torch.nn.modules.container', 'params': 116736}, {'index': 98, 'name': 'PSABlock', 'module': 'ultralytics.nn.modules.block', 'params': 116736}, {'index': 99, 'name': 'Attention', 'module': 'ultralytics.nn.modules.block', 'params': 50816}, {'index': 100, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 33024}, {'index': 101, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 33024, 'in_channels': 128, 'out_channels': 256, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 102, 'name': 'Identity', 'module': 'torch.nn.modules.linear', 'params': 0}, {'index': 103, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 16512}, {'index': 104, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 16512, 'in_channels': 128, 'out_channels': 128, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 105, 'name': 'Identity', 'module': 'torch.nn.modules.linear', 'params': 0}, {'index': 106, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 1280}, {'index': 107, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 1280, 'in_channels': 128, 'out_channels': 128, 'kernel_size': (3, 3), 'stride': (1, 1)}, {'index': 108, 'name': 'Identity', 'module': 'torch.nn.modules.linear', 'params': 0}, {'index': 109, 'name': 'Sequential', 'module': 'torch.nn.modules.container', 'params': 65920}, {'index': 110, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 33024}, {'index': 111, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 33024, 'in_channels': 128, 'out_channels': 256, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 112, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 32896}, {'index': 113, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 32896, 'in_channels': 256, 'out_channels': 128, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 114, 'name': 'Identity', 'module': 'torch.nn.modules.linear', 'params': 0}, {'index': 115, 'name': 'Classify', 'module': 'ultralytics.nn.modules.head', 'params': 459622}, {'index': 116, 'name': 'Conv', 'module': 'ultralytics.nn.modules.conv', 'params': 328960}, {'index': 117, 'name': 'Conv2d', 'module': 'torch.nn.modules.conv', 'params': 328960, 'in_channels': 256, 'out_channels': 1280, 'kernel_size': (1, 1), 'stride': (1, 1)}, {'index': 118, 'name': 'AdaptiveAvgPool2d', 'module': 'torch.nn.modules.pooling', 'params': 0}, {'index': 119, 'name': 'Dropout', 'module': 'torch.nn.modules.dropout', 'params': 0}, {'index': 120, 'name': 'Linear', 'module': 'torch.nn.modules.linear', 'params': 130662}]
+
+4. 模型信息
+----------------------------------------
+model_type: YOLO
+model_config: ultralytics/cfg/models/26/Att_yaml/yolo26n-CBAM-cls.yaml
+total_params: 1,657,296
+trainable_params: 0
+
+5. 模型层信息
+----------------------------------------
+ index     params module                                   arguments                               
+------------------------------------------------------------------------------------------------------------------------
+     0    1657296 tasks.ClassificationModel                []                                      
+     1    1657296 container.Sequential                     []                                      
+     2        448 conv.Conv                                []                                      
+     3        448 conv.Conv2d                              [3, 16, (3, 3), (2, 2)]                 
+     4          0 activation.SiLU                          []                                      
+     5       4640 conv.Conv                                []                                      
+     6       4640 conv.Conv2d                              [16, 32, (3, 3), (2, 2)]                
+     7       6520 block.C3k2                               []                                      
+     8       1056 conv.Conv                                []                                      
+     9       1056 conv.Conv2d                              [32, 32, (1, 1), (1, 1)]                
+    10       3136 conv.Conv                                []                                      
+    11       3136 conv.Conv2d                              [48, 64, (1, 1), (1, 1)]                
+    12       2328 container.ModuleList                     []                                      
+    13       2328 block.Bottleneck                         []                                      
+    14       1160 conv.Conv                                []                                      
+    15       1160 conv.Conv2d                              [16, 8, (3, 3), (1, 1)]                 
+    16       1168 conv.Conv                                []                                      
+    17       1168 conv.Conv2d                              [8, 16, (3, 3), (1, 1)]                 
+    18        610 CBAM.CBAM                                []                                      
+    19          0 pooling.AdaptiveAvgPool2d                []                                      
+    20          0 pooling.AdaptiveMaxPool2d                []                                      
+    21        512 container.Sequential                     []                                      
+    22        256 conv.Conv2d                              [64, 4, (1, 1), (1, 1)]                 
+    23          0 activation.ReLU                          []                                      
+    24        256 conv.Conv2d                              [4, 64, (1, 1), (1, 1)]                 
+    25         98 conv.Conv2d                              [2, 1, (7, 7), (1, 1)]                  
+    26          0 activation.Sigmoid                       []                                      
+    27      36928 conv.Conv                                []                                      
+    28      36928 conv.Conv2d                              [64, 64, (3, 3), (2, 2)]                
+    29      25840 block.C3k2                               []                                      
+    30       4160 conv.Conv                                []                                      
+    31       4160 conv.Conv2d                              [64, 64, (1, 1), (1, 1)]                
+    32      12416 conv.Conv                                []                                      
+    33      12416 conv.Conv2d                              [96, 128, (1, 1), (1, 1)]               
+    34       9264 container.ModuleList                     []                                      
+    35       9264 block.Bottleneck                         []                                      
+    36       4624 conv.Conv                                []                                      
+    37       4624 conv.Conv2d                              [32, 16, (3, 3), (1, 1)]                
+    38       4640 conv.Conv                                []                                      
+    39       4640 conv.Conv2d                              [16, 32, (3, 3), (1, 1)]                
+    40     147584 conv.Conv                                []                                      
+    41     147584 conv.Conv2d                              [128, 128, (3, 3), (2, 2)]              
+    42      86528 block.C3k2                               []                                      
+    43      16512 conv.Conv                                []                                      
+    44      16512 conv.Conv2d                              [128, 128, (1, 1), (1, 1)]              
+    45      24704 conv.Conv                                []                                      
+    46      24704 conv.Conv2d                              [192, 128, (1, 1), (1, 1)]              
+    47      45312 container.ModuleList                     []                                      
+    48      45312 block.C3k                                []                                      
+    49       2080 conv.Conv                                []                                      
+    50       2080 conv.Conv2d                              [64, 32, (1, 1), (1, 1)]                
+    51       2080 conv.Conv                                []                                      
+    52       2080 conv.Conv2d                              [64, 32, (1, 1), (1, 1)]                
+    53       4160 conv.Conv                                []                                      
+    54       4160 conv.Conv2d                              [64, 64, (1, 1), (1, 1)]                
+    55      36992 container.Sequential                     []                                      
+    56      18496 block.Bottleneck                         []                                      
+    57       9248 conv.Conv                                []                                      
+    58       9248 conv.Conv2d                              [32, 32, (3, 3), (1, 1)]                
+    59       9248 conv.Conv                                []                                      
+    60       9248 conv.Conv2d                              [32, 32, (3, 3), (1, 1)]                
+    61      18496 block.Bottleneck                         []                                      
+    62       9248 conv.Conv                                []                                      
+    63       9248 conv.Conv2d                              [32, 32, (3, 3), (1, 1)]                
+    64       9248 conv.Conv                                []                                      
+    65       9248 conv.Conv2d                              [32, 32, (3, 3), (1, 1)]                
+    66     295168 conv.Conv                                []                                      
+    67     295168 conv.Conv2d                              [128, 256, (3, 3), (2, 2)]              
+    68     345088 block.C3k2                               []                                      
+    69      65792 conv.Conv                                []                                      
+    70      65792 conv.Conv2d                              [256, 256, (1, 1), (1, 1)]              
+    71      98560 conv.Conv                                []                                      
+    72      98560 conv.Conv2d                              [384, 256, (1, 1), (1, 1)]              
+    73     180736 container.ModuleList                     []                                      
+    74     180736 block.C3k                                []                                      
+    75       8256 conv.Conv                                []                                      
+    76       8256 conv.Conv2d                              [128, 64, (1, 1), (1, 1)]               
+    77       8256 conv.Conv                                []                                      
+    78       8256 conv.Conv2d                              [128, 64, (1, 1), (1, 1)]               
+    79      16512 conv.Conv                                []                                      
+    80      16512 conv.Conv2d                              [128, 128, (1, 1), (1, 1)]              
+    81     147712 container.Sequential                     []                                      
+    82      73856 block.Bottleneck                         []                                      
+    83      36928 conv.Conv                                []                                      
+    84      36928 conv.Conv2d                              [64, 64, (3, 3), (1, 1)]                
+    85      36928 conv.Conv                                []                                      
+    86      36928 conv.Conv2d                              [64, 64, (3, 3), (1, 1)]                
+    87      73856 block.Bottleneck                         []                                      
+    88      36928 conv.Conv                                []                                      
+    89      36928 conv.Conv2d                              [64, 64, (3, 3), (1, 1)]                
+    90      36928 conv.Conv                                []                                      
+    91      36928 conv.Conv2d                              [64, 64, (3, 3), (1, 1)]                
+    92     248320 block.C2PSA                              []                                      
+    93      65792 conv.Conv                                []                                      
+    94      65792 conv.Conv2d                              [256, 256, (1, 1), (1, 1)]              
+    95      65792 conv.Conv                                []                                      
+    96      65792 conv.Conv2d                              [256, 256, (1, 1), (1, 1)]              
+    97     116736 container.Sequential                     []                                      
+    98     116736 block.PSABlock                           []                                      
+    99      50816 block.Attention                          []                                      
+   100      33024 conv.Conv                                []                                      
+   101      33024 conv.Conv2d                              [128, 256, (1, 1), (1, 1)]              
+   102          0 linear.Identity                          []                                      
+   103      16512 conv.Conv                                []                                      
+   104      16512 conv.Conv2d                              [128, 128, (1, 1), (1, 1)]              
+   105          0 linear.Identity                          []                                      
+   106       1280 conv.Conv                                []                                      
+   107       1280 conv.Conv2d                              [128, 128, (3, 3), (1, 1)]              
+   108          0 linear.Identity                          []                                      
+   109      65920 container.Sequential                     []                                      
+   110      33024 conv.Conv                                []                                      
+   111      33024 conv.Conv2d                              [128, 256, (1, 1), (1, 1)]              
+   112      32896 conv.Conv                                []                                      
+   113      32896 conv.Conv2d                              [256, 128, (1, 1), (1, 1)]              
+   114          0 linear.Identity                          []                                      
+   115     459622 head.Classify                            []                                      
+   116     328960 conv.Conv                                []                                      
+   117     328960 conv.Conv2d                              [256, 1280, (1, 1), (1, 1)]             
+   118          0 pooling.AdaptiveAvgPool2d                []                                      
+   119          0 dropout.Dropout                          []                                      
+   120     130662 linear.Linear                            []                                      
+
+6. 训练结果
+----------------------------------------
+验证结果: ultralytics.utils.metrics.ClassifyMetrics object with attributes:
+
+confusion_matrix: <ultralytics.utils.metrics.ConfusionMatrix object at 0x00000224E1FA20D0>
+curves: []
+curves_results: []
+fitness: 0.7073529660701752
+keys: ['metrics/accuracy_top1', 'metrics/accuracy_top5']
+results_dict: {'metrics/accuracy_top1': 0.5607843399047852, 'metrics/accuracy_top5': 0.8539215922355652, 'fitness': 0.7073529660701752}
+save_dir: WindowsPath('D:/aelm/deeplearning/flower_classification/runs/classify/val33')
+speed: {'preprocess': 0.2519846078511738, 'inference': 1.4881290196011405, 'loss': 0.004233333332676385, 'postprocess': 0.0010897058785428503}
+top1: 0.5607843399047852
+top5: 0.8539215922355652
+
+7. 模型保存信息
+----------------------------------------
+模型保存路径: D:\aelm\deeplearning\flower_classification\weights\trained_weights\yolo26n_CBAM_flower_cls_model.pt
+模型大小: 3.23 MB
+
+================================================================================
+训练日志生成完成
+================================================================================

@@ -1,0 +1,17 @@
+onnx
+onnxruntime
+pycocotools
+PyYAML
+scipy
+onnxslim
+onnxruntime-gpu
+gradio
+opencv-python
+psutil
+py-cpuinfo
+huggingface-hub
+safetensors
+thop
+scikit-learn
+matplotlib
+seaborn
