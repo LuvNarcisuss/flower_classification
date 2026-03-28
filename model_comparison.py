@@ -89,82 +89,89 @@ class ModelPerformanceAnalyzer:
             'inference_time_ms': avg_time * 1000,
             'fps': fps
         }
-    
+
     def _test_accuracy(self, model):
         """测试模型准确率"""
+        # 初始化所有指标为0
+        metrics = {
+            'accuracy_top1': 0,
+            'accuracy_top5': 0,
+            'accuracy': 0,
+            'precision': 0,
+            'recall': 0,
+            'f1': 0
+        }
+        
         try:
+            # 首先尝试使用YOLO的val()方法获取基本指标
             results = model.val(data=self.test_data_path, device=self.device)
-            metrics = {
-                'accuracy_top1': results.top1,
-                'accuracy_top5': results.top5
-            }
-            
-            # 尝试手动计算其他指标
-            from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-            import os
-            import glob
-            
-            # 获取测试数据
-            test_dir = os.path.join(self.test_data_path, 'val')
-            if not os.path.exists(test_dir):
-                test_dir = os.path.join(self.test_data_path, 'test')
-            
-            if os.path.exists(test_dir):
-                y_true = []
-                y_pred = []
-                
-                # 获取所有类别
-                classes = [d for d in os.listdir(test_dir) if os.path.isdir(os.path.join(test_dir, d))]
-                class_to_idx = {cls: i for i, cls in enumerate(classes)}
-                
-                # 遍历测试数据
-                for cls in classes:
-                    cls_dir = os.path.join(test_dir, cls)
-                    img_paths = glob.glob(os.path.join(cls_dir, '*.*'))
-                    
-                    for img_path in img_paths:
-                        # 预测
-                        result = model.predict(img_path, device=self.device, verbose=False)[0]
-                        # 获取预测类别
-                        pred_idx = result.probs.top1
-                        pred_cls = classes[pred_idx] if pred_idx < len(classes) else 'unknown'
-                        
-                        # 记录真实标签和预测标签
-                        y_true.append(class_to_idx[cls])
-                        y_pred.append(class_to_idx.get(pred_cls, -1))
-                
-                # 计算指标
-                if y_true and y_pred:
-                    metrics['accuracy'] = accuracy_score(y_true, y_pred)
-                    metrics['precision'] = precision_score(y_true, y_pred, average='weighted', zero_division=0)
-                    metrics['recall'] = recall_score(y_true, y_pred, average='weighted', zero_division=0)
-                    metrics['f1'] = f1_score(y_true, y_pred, average='weighted', zero_division=0)
-                    print(f"手动计算的指标: accuracy={metrics['accuracy']:.4f}, precision={metrics['precision']:.4f}, recall={metrics['recall']:.4f}, f1={metrics['f1']:.4f}")
-                else:
-                    # 如果没有测试数据，使用top1作为默认值
-                    metrics['accuracy'] = results.top1
-                    metrics['precision'] = results.top1
-                    metrics['recall'] = results.top1
-                    metrics['f1'] = results.top1
-            else:
-                # 如果测试目录不存在，使用top1作为默认值
-                metrics['accuracy'] = results.top1
-                metrics['precision'] = results.top1
-                metrics['recall'] = results.top1
-                metrics['f1'] = results.top1
+            metrics['accuracy_top1'] = results.top1
+            metrics['accuracy_top5'] = results.top5
             
             print(f"模型准确率: Top-1={results.top1:.4f}, Top-5={results.top5:.4f}")
             
+            # 尝试手动计算其他指标
+            try:
+                from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+                import os
+                import glob
+                
+                # 获取测试数据
+                test_dir = os.path.join(self.test_data_path, 'val')
+                if not os.path.exists(test_dir):
+                    test_dir = os.path.join(self.test_data_path, 'test')
+                
+                if os.path.exists(test_dir):
+                    y_true = []
+                    y_pred = []
+                    
+                    # 获取所有类别
+                    classes = [d for d in os.listdir(test_dir) if os.path.isdir(os.path.join(test_dir, d))]
+                    if not classes:
+                        print("测试目录中没有类别文件夹")
+                        return metrics
+                    
+                    class_to_idx = {cls: i for i, cls in enumerate(classes)}
+                    
+                    # 遍历测试数据
+                    for cls in classes:
+                        cls_dir = os.path.join(test_dir, cls)
+                        img_paths = glob.glob(os.path.join(cls_dir, '*.*'))
+                        
+                        for img_path in img_paths:
+                            try:
+                                # 预测
+                                result = model.predict(img_path, device=self.device, verbose=False)[0]
+                                # 获取预测类别
+                                pred_idx = result.probs.top1
+                                if pred_idx < len(classes):
+                                    pred_cls = classes[pred_idx]
+                                    # 记录真实标签和预测标签
+                                    y_true.append(class_to_idx[cls])
+                                    y_pred.append(class_to_idx[pred_cls])
+                            except Exception as pred_error:
+                                print(f"预测图像时出错: {pred_error}")
+                                continue
+                    
+                    # 计算指标
+                    if y_true and y_pred:
+                        metrics['accuracy'] = accuracy_score(y_true, y_pred)
+                        metrics['precision'] = precision_score(y_true, y_pred, average='weighted', zero_division=0)
+                        metrics['recall'] = recall_score(y_true, y_pred, average='weighted', zero_division=0)
+                        metrics['f1'] = f1_score(y_true, y_pred, average='weighted', zero_division=0)
+                        print(f"手动计算的指标: accuracy={metrics['accuracy']:.4f}, precision={metrics['precision']:.4f}, recall={metrics['recall']:.4f}, f1={metrics['f1']:.4f}")
+                    else:
+                        print("没有有效的预测数据，无法计算指标")
+                else:
+                    print("测试目录不存在")
+            except ImportError:
+                print("缺少scikit-learn库，无法计算详细指标")
+            except Exception as calc_error:
+                print(f"计算指标时出错: {calc_error}")
+            
         except Exception as e:
             print(f"测试准确率时出错: {e}")
-            metrics = {
-                'accuracy_top1': 0,
-                'accuracy_top5': 0,
-                'accuracy': 0,
-                'precision': 0,
-                'recall': 0,
-                'f1': 0
-            }
+        
         return metrics
     
     def _test_memory_usage(self, model):
@@ -193,10 +200,8 @@ class ModelPerformanceAnalyzer:
         if output_dir is None:
             output_dir = Path(__file__).parent / 'performance_reports'
         output_dir.mkdir(exist_ok=True)
-        
-        # 生成时间戳
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        report_file = output_dir / f'性能报告.md'
+
+        report_file = output_dir / f'性能报告/性能报告_{datetime.now().strftime("%Y%m%d_%H%M%S")}.md'
         
         # 生成Markdown报告
         with open(report_file, 'w', encoding='utf-8') as f:
@@ -255,16 +260,32 @@ class ModelPerformanceAnalyzer:
         memory_usage = [m['memory_usage_mb'] for m in metrics]
         
         # 1. 准确率对比
-        plt.figure(figsize=(10, 6))
-        x = np.arange(len(model_names))
-        width = 0.35
+        plt.figure(figsize=(12, 8))
         
-        plt.bar(x - width/2, top1_acc, width, label='Top-1 准确率')
-        plt.bar(x + width/2, top5_acc, width, label='Top-5 准确率')
-        plt.xlabel('模型')
+        # 定义指标名称和颜色
+        metrics_names = ['Top-1 准确率', 'Top-5 准确率']
+        metrics_data = [top1_acc, top5_acc]
+        colors = plt.cm.tab10(np.arange(len(model_names)))
+        
+        # 设置条形图宽度
+        bar_width = 0.8 / len(model_names)
+        
+        # 绘制每个指标的条形图
+        for i, (metric_name, metric_data) in enumerate(zip(metrics_names, metrics_data)):
+            # 为每个指标创建一组条形图
+            for j, (model_name, value) in enumerate(zip(model_names, metric_data)):
+                # 计算每个模型在该指标组中的位置
+                x_pos = i + j * bar_width
+                plt.bar(x_pos, value, bar_width, color=colors[j], label=model_name if i == 0 else "")
+        
+        # 设置x轴标签
+        plt.xlabel('指标')
         plt.ylabel('准确率')
         plt.title('不同注意力机制模型的准确率对比')
-        plt.xticks(x, model_names, rotation=45)
+        # 调整x轴刻度位置和标签
+        plt.xticks(np.arange(len(metrics_names)) + bar_width * (len(model_names) - 1) / 2, metrics_names)
+        
+        # 添加图例
         plt.legend()
         plt.tight_layout()
         acc_plot_path = output_dir / '不同注意力机制模型的准确率对比.png'
@@ -385,8 +406,8 @@ class ModelPerformanceAnalyzer:
         ax.set_xticks(angles[:-1])
         ax.set_xticklabels(list(metrics_to_plot.keys()))
         
-        # 准确率、精确率、召回率、F1值都是0-1之间的值，设置范围为0.5-1以增强对比
-        ax.set_ylim(0.5, 1)
+        # 设置范围为0.94-0.96以增强对比
+        ax.set_ylim(0.94, 0.96)
         plt.title('不同注意力机制模型的综合性能对比', size=15, y=1.1)
         plt.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
         radar_plot_path = output_dir / '不同注意力机制模型的综合性能对比.png'
@@ -399,9 +420,9 @@ class ModelPerformanceAnalyzer:
 def main():
     # 模型路径
     model_paths = [
-        'weights/trained_weights/yolo26n_SE_flower_cls_model.pt',
-        'weights/trained_weights/yolo26n_CBAM_flower_cls_model.pt',
-        'weights/trained_weights/yolo26n_flower_cls_model.pt']
+        'weights/trained_weights/yolo26s_SE_flower_cls_model.pt',
+        'weights/trained_weights/yolo26s_CBAM_flower_cls_model.pt',
+        'weights/trained_weights/yolo26s_flower_cls_model.pt']
 
     # weights_dir = Path('weights/trained_weights')
     # model_paths = [str(p) for p in weights_dir.glob('*.pt')]

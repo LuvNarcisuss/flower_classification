@@ -23,7 +23,10 @@ class SE(nn.Module):
         hidden = max(1, channels // reduction)  # 防止 C 很小时变成 0
 
         # 1) Squeeze: 全局平均池化 (B,C,H,W) -> (B,C,1,1)
-        self.gap = nn.AdaptiveAvgPool2d(1)
+        # self.gap = nn.AdaptiveAvgPool2d(1)
+        # swim 结构 swin卷积结构， swin 注意力机制
+        # 1) ===============================================Squeeze: 全局最大池化 (B,C,H,W) -> (B,C,1,1)
+        self.gap = nn.AdaptiveMaxPool2d(1)
 
         # 2) Excitation: 两层“通道 MLP”，这里用 1x1 Conv 来实现
         #    (B,C,1,1) -> (B,hidden,1,1) -> (B,C,1,1)

@@ -2,7 +2,7 @@ task: classify
 mode: train
 model: ultralytics/cfg/models/26/Att_yaml/yolo26n-CBAM-cls.yaml
 data: D:\aelm\deeplearning\flower_classification\flower_photos_split
-epochs: 100
+epochs: 200
 time: null
 patience: 100
 batch: 16

@@ -2,7 +2,7 @@ task: classify
 mode: train
 model: weights/yolo26n-cls.pt
 data: D:\aelm\deeplearning\flower_classification\flower_photos_split
-epochs: 50
+epochs: 200
 time: null
 patience: 100
 batch: 16

@@ -16,7 +16,7 @@ scales: # model compound scaling constants, i.e. 'model=yolo26n-cls.yaml' will c
 
 # YOLO26n backbone
 backbone:
-  # [from, repeats, module, args]
+  # [from, repeats, module, args]   膨胀卷积，自适应卷积，，swim卷积，
   - [-1, 1, Conv, [64, 3, 2]]              # 0-P1/2
   - [-1, 1, Conv, [128, 3, 2]]              # 1-P2/4
   - [-1, 2, C3k2, [256, False, 0.25]]       # 2
@@ -24,11 +24,11 @@ backbone:
   - [-1, 2, C3k2, [512, False, 0.25]]       # 4
   - [-1, 1, Conv, [512, 3, 2]]               # 5-P4/16
   - [-1, 2, C3k2, [512, True]]               # 6
-  - [-1, 1, SE, [16]]                   # 新增 SE (通道512, reduction=16)
   - [-1, 1, Conv, [1024, 3, 2]]              # 7-P5/32
   - [-1, 2, C3k2, [1024, True]]              # 8
-  - [-1, 1, SE, [16]]                   # 新增 SE (通道1024, reduction=16)
   - [-1, 2, C2PSA, [1024]]                    # 9
+  - [-1, 2, SE, [16] ]
+
 
 # YOLO26n head
 head:
