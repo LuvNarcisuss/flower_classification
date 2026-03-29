@@ -107,6 +107,7 @@ def train_model(model_name):
         'project': 'flower_detection',    # 项目名称
         'name': train_name,               # 训练结果名称
         'exist_ok': True,                 # 如果项目已存在，覆盖它
+        'optimizer': 'Adam',              # 使用 Adam 优化器
         'task': 'classify',               # 指定任务类型为分类
         'classes': classes                # 显式指定类别顺序，确保与预测时一致
     }

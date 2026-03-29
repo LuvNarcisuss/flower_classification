@@ -2,6 +2,7 @@ import torch
 import gc
 
 print(f"CUDA 可用: {torch.cuda.is_available()}")
+print(f"CUDA 版本: {torch.version.cuda}")
 print(f"GPU 数量: {torch.cuda.device_count()}")
 
 if torch.cuda.is_available():

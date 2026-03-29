@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模型训练过程</title>
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #45a049;
+            --secondary-color: #2196F3;
+            --secondary-dark: #0b7dda;
+            --accent-color: #FF6B9C;
+            --accent-secondary: #4ECDC4;
+            --text-color: #212529;
+            --text-light: #666;
+            --text-lighter: #999;
+            --background: #f8f9fa;
+            --background-white: #ffffff;
+            --border-color: #e9ecef;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        /* 深色模式 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #e0e0e0;
+                --text-light: #b0b0b0;
+                --text-lighter: #808080;
+                --background: #1a1a1a;
+                --background-white: #2d2d2d;
+                --border-color: #404040;
+                --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        /* 手动深色模式 */
+        body.dark-mode {
+            --text-color: #e0e0e0;
+            --text-light: #b0b0b0;
+            --text-lighter: #808080;
+            --background: #1a1a1a;
+            --background-white: #2d2d2d;
+            --border-color: #404040;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-secondary));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 1px 20px 20px 20px;
+            flex: 1;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 1px;
+            min-height: 40vh;
+        }
+
+        .top-section {
+            padding: 0;
+            grid-column: 1 / -1;
+        }
+
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            min-height: 300px;
+        }
+
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .training-section {
+            background-color: var(--background-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            background-color: var(--background-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 10px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: calc(100% - 30px);
+        }
+
+        .training-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background-color: rgba(76, 175, 80, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-back {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-back:hover {
+            background-color: var(--secondary-dark);
+        }
+
+        .footer {
+            background-color: var(--text-color);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        .footer p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .training-section {
+                padding: 20px;
+            }
+
+            .chart-wrapper {
+                height: 300px;
+            }
+
+            .training-info {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-section {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .training-section {
+                padding: 15px;
+            }
+
+            .chart-wrapper {
+                height: 250px;
+            }
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .modal-content {
+            background-color: var(--background-white);
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            width: 80%;
+            max-width: 900px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            color: var(--text-light);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-body {
+            position: relative;
+            height: 500px;
+        }
+
+        /* 图表预览样式 */
+        .chart-container {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 表格样式 */
+        .table-container {
+            flex: 1;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            min-height: 0;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: var(--background);
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: var(--text-light);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            height: 100%;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .data-table tr {
+            transition: var(--transition);
+        }
+
+        .data-table tr:hover {
+            background-color: rgba(76, 175, 80, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .data-table td {
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .data-table {
+                font-size: 0.8rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 100%; margin: 0 auto; padding: 0 20px;">
+            <div>
+                <h1>模型训练过程</h1>
+                <p>深度学习模型训练指标分析</p>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                {% if is_logged_in %}
+                    <span style="color: white; font-weight: 500;">欢迎，{{ username }}</span>
+                    <a href="/logout" style="color: white; text-decoration: none; padding: 8px 16px; border: 1px solid white; border-radius: 20px; transition: all 0.3s ease;">注销</a>
+                {% else %}
+                    <a href="/login" style="color: white; text-decoration: none; padding: 8px 16px; border: 1px solid white; border-radius: 20px; transition: all 0.3s ease;">登录</a>
+                    <a href="/register" style="color: white; text-decoration: none; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.2); border-radius: 20px; transition: all 0.3s ease;">注册</a>
+                {% endif %}
+                <button id="theme-toggle" style="background: none; border: 1px solid white; color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="top-section">
+            <div class="training-section">
+                <h2 class="section-title">
+                    <i class="fas fa-network-wired"></i> 训练概览
+                </h2>
+
+                <div class="training-info">
+                    <div class="info-card">
+                        <div class="info-value">{{ training_data.epochs }}</div>
+                        <div class="info-label">训练轮数</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">{{ "%.4f"|format(training_data.loss[-1]) if training_data.loss else 'N/A' }}</div>
+                        <div class="info-label">最终训练损失</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">{{ "%.4f"|format(training_data.accuracy[-1]) if training_data.accuracy else 'N/A' }}</div>
+                        <div class="info-label">最终Top-1准确率</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">{{ "%.4f"|format(training_data.accuracy_top5[-1]) if training_data.accuracy_top5 else 'N/A' }}</div>
+                        <div class="info-label">最终Top-5准确率</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">{{ "%.4f"|format(training_data.val_loss[-1]) if training_data.val_loss else 'N/A' }}</div>
+                        <div class="info-label">最终验证损失</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-value">{{ "%.2f"|format(training_data.time[-1]/60) if training_data.time else 'N/A' }}分</div>
+                        <div class="info-label">总训练时间</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="left-section">
+                <div class="chart-container">
+                    <h3 class="chart-title">损失曲线</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="lossChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 class="chart-title">准确率曲线</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="accuracyChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 class="chart-title">学习率变化 (pg0)</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="lrChart"></canvas>
+                    </div>
+                </div>
+                
+                {% if training_data.learning_rates %}
+                <div class="chart-container">
+                    <h3 class="chart-title">所有学习率参数变化</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="allLrChart"></canvas>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="chart-container">
+                    <h3 class="chart-title">训练时间累积</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="timeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <!-- 详细数据表格 -->
+                <div class="training-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-table"></i> 详细训练数据
+                    </h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>轮次</th>
+                                    <th>时间(秒)</th>
+                                    <th>训练损失</th>
+                                    <th>Top-1准确率</th>
+                                    <th>Top-5准确率</th>
+                                    <th>验证损失</th>
+                                    <th>学习率(pg0)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in range(training_data.epochs) %}
+                                <tr>
+                                    <td>{{ training_data.epoch[i] }}</td>
+                                    <td>{{ "%.2f"|format(training_data.time[i]) }}</td>
+                                    <td>{{ "%.4f"|format(training_data.loss[i]) }}</td>
+                                    <td>{{ "%.4f"|format(training_data.accuracy[i]) }}</td>
+                                    <td>{{ "%.4f"|format(training_data.accuracy_top5[i]) }}</td>
+                                    <td>{{ "%.4f"|format(training_data.val_loss[i]) }}</td>
+                                    <td>{{ "%.6f"|format(training_data.learning_rate[i]) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="btn-container">
+            <a href="/" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+            <a href="/performance" class="btn">
+                <i class="fas fa-chart-line"></i> 模型性能分析
+            </a>
+        </div>
+    </div>
+
+    <!-- 图表模态框 -->
+    <div id="chartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modalTitle" class="modal-title"></h3>
+            <div class="modal-body">
+                <canvas id="modalChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 花朵识别系统 - 探索植物世界的奥秘</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成epoch数组
+            const epochs = Array.from({length: {{ training_data.epochs }}}, (_, i) => i + 1);
+            
+            // 图表配置数据
+            const chartConfigs = {
+                loss: {
+                    title: '损失曲线',
+                    type: 'line',
+                    data: {
+                        labels: epochs,
+                        datasets: [
+                            {
+                                label: '训练损失',
+                                data: {{ training_data.loss|tojson }},
+                                borderColor: 'rgba(76, 175, 80, 1)',
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                tension: 0.1
+                            },
+                            {
+                                label: '验证损失',
+                                data: {{ training_data.val_loss|tojson }},
+                                borderColor: 'rgba(33, 150, 243, 1)',
+                                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                                tension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: '损失值'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '轮数'
+                                }
+                            }
+                        }
+                    }
+                },
+                accuracy: {
+                    title: '准确率曲线',
+                    type: 'line',
+                    data: {
+                        labels: epochs,
+                        datasets: [
+                            {
+                                label: '训练准确率',
+                                data: {{ training_data.accuracy|tojson }},
+                                borderColor: 'rgba(76, 175, 80, 1)',
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                tension: 0.1
+                            },
+                            {
+                                label: '验证准确率',
+                                data: {{ training_data.val_accuracy|tojson }},
+                                borderColor: 'rgba(33, 150, 243, 1)',
+                                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                                tension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 1,
+                                title: {
+                                    display: true,
+                                    text: '准确率'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '轮数'
+                                }
+                            }
+                        }
+                    }
+                },
+                lr: {
+                    title: '学习率变化 (pg0)',
+                    type: 'line',
+                    data: {
+                        labels: epochs,
+                        datasets: [
+                            {
+                                label: '学习率 (pg0)',
+                                data: {{ training_data.learning_rate|tojson }},
+                                borderColor: 'rgba(255, 107, 156, 1)',
+                                backgroundColor: 'rgba(255, 107, 156, 0.1)',
+                                tension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'logarithmic',
+                                title: {
+                                    display: true,
+                                    text: '学习率 (对数刻度)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '轮数'
+                                }
+                            }
+                        }
+                    }
+                },
+                allLr: {
+                    title: '所有学习率参数变化',
+                    type: 'line',
+                    data: {
+                        labels: epochs,
+                        datasets: []
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'logarithmic',
+                                title: {
+                                    display: true,
+                                    text: '学习率 (对数刻度)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '轮数'
+                                }
+                            }
+                        }
+                    }
+                },
+                time: {
+                    title: '训练时间累积',
+                    type: 'line',
+                    data: {
+                        labels: epochs,
+                        datasets: [
+                            {
+                                label: '累积训练时间 (秒)',
+                                data: {{ training_data.time|tojson }},
+                                borderColor: 'rgba(156, 39, 176, 1)',
+                                backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                                tension: 0.1,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: '时间 (秒)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '轮数'
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // 生成所有学习率参数曲线的数据集
+            {% if training_data.learning_rates %}
+            const lrColors = [
+                'rgba(255, 107, 156, 1)',
+                'rgba(76, 175, 80, 1)',
+                'rgba(33, 150, 243, 1)',
+                'rgba(255, 193, 7, 1)',
+                'rgba(156, 39, 176, 1)',
+                'rgba(0, 188, 212, 1)',
+                'rgba(255, 87, 34, 1)',
+                'rgba(96, 125, 139, 1)'
+            ];
+            {% for pg, values in training_data.learning_rates.items() %}
+            chartConfigs.allLr.data.datasets.push({
+                label: '学习率 ({{ pg }})',
+                data: {{ values|tojson }},
+                borderColor: lrColors[{{ loop.index0 }} % 8],
+                backgroundColor: lrColors[{{ loop.index0 }} % 8].replace('1)', '0.1)'),
+                tension: 0.1
+            });
+            {% endfor %}
+            {% endif %}
+            
+            // 初始化所有图表
+            const lossCtx = document.getElementById('lossChart').getContext('2d');
+            const lossChart = new Chart(lossCtx, chartConfigs.loss);
+            
+            const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
+            const accuracyChart = new Chart(accuracyCtx, chartConfigs.accuracy);
+            
+            const lrCtx = document.getElementById('lrChart').getContext('2d');
+            const lrChart = new Chart(lrCtx, chartConfigs.lr);
+            
+            {% if training_data.learning_rates %}
+            const allLrCtx = document.getElementById('allLrChart').getContext('2d');
+            const allLrChart = new Chart(allLrCtx, chartConfigs.allLr);
+            {% endif %}
+            
+            const timeCtx = document.getElementById('timeChart').getContext('2d');
+            const timeChart = new Chart(timeCtx, chartConfigs.time);
+            
+            // 模态框相关
+            const modal = document.getElementById('chartModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.querySelector('.modal-body');
+            const closeBtn = document.querySelector('.close');
+            let modalChart = null;
+            
+            // 打开模态框显示完整图表
+            function openModal(chartId) {
+                const config = chartConfigs[chartId];
+                if (config) {
+                    modalTitle.textContent = config.title;
+                    
+                    // 销毁之前的图表
+                    if (modalChart) {
+                        modalChart.destroy();
+                    }
+                    
+                    // 创建新图表
+                    const modalCtx = document.getElementById('modalChart').getContext('2d');
+                    modalChart = new Chart(modalCtx, config);
+                    
+                    // 显示模态框
+                    modal.style.display = 'block';
+                }
+            }
+            
+            // 关闭模态框
+            function closeModal() {
+                modal.style.display = 'none';
+                if (modalChart) {
+                    modalChart.destroy();
+                    modalChart = null;
+                }
+            }
+            
+            // 为图表容器添加点击事件
+            const chartContainers = document.querySelectorAll('.chart-container');
+            chartContainers.forEach((container, index) => {
+                let chartId;
+                switch(index) {
+                    case 0:
+                        chartId = 'loss';
+                        break;
+                    case 1:
+                        chartId = 'accuracy';
+                        break;
+                    case 2:
+                        chartId = 'lr';
+                        break;
+                    case 3:
+                        chartId = 'allLr';
+                        break;
+                    case 4:
+                        chartId = 'time';
+                        break;
+                    default:
+                        return;
+                }
+                
+                container.addEventListener('click', function() {
+                    openModal(chartId);
+                });
+            });
+            
+            // 关闭按钮点击事件
+            closeBtn.addEventListener('click', closeModal);
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+        
+        // 深色模式切换
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // 检查本地存储中的主题设置
+        if (localStorage.getItem('theme') === 'dark' || 
+            (localStorage.getItem('theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+                // 更新图表颜色
+                updateChartColors();
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+                // 更新图表颜色
+                updateChartColors();
+            }
+        });
+        
+        // 更新图表颜色
+        function updateChartColors() {
+            const isDark = document.body.classList.contains('dark-mode');
+            const textColor = isDark ? '#e0e0e0' : '#212529';
+            
+            // 更新所有图表
+            Chart.helpers.each(Chart.instances, function(chart) {
+                if (chart.options.scales.x) {
+                    chart.options.scales.x.ticks.color = textColor;
+                }
+                if (chart.options.scales.y) {
+                    chart.options.scales.y.ticks.color = textColor;
+                }
+                if (chart.options.scales.y1) {
+                    chart.options.scales.y1.ticks.color = textColor;
+                }
+                if (chart.options.plugins && chart.options.plugins.legend) {
+                    chart.options.plugins.legend.labels.color = textColor;
+                }
+                chart.update();
+            });
+        }
+    </script>
+</body>
+</html>
