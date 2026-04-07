@@ -1,4 +1,4 @@
-# 花卉分类项目
+# 花卉识别分类系统
 
 ## 项目简介
 
@@ -36,15 +36,15 @@ flower_classification/
 项目基于以下主要依赖项：
 
 - Python 3.8+
-- PyTorch 1.8.0+
-- NumPy 1.23.0+
-- OpenCV 4.6.0+
-- Matplotlib 3.3.0+
+- PyTorch 2.4.0+
+- NumPy 1.26.4+
+- OpenCV 4.10.0+
+- Matplotlib 3.9.2+
 - Ultralytics 框架
-- Flask 3.0.0+ (Web应用)
-- pandas 2.0.0+ (数据处理)
+- Flask 3.0.3+ (Web应用)
+- pandas 2.2.2+ (数据处理)
 
-详细依赖项请参考 `pyproject.toml` 文件。
+详细依赖项请参考 `requirements.txt` 和 `pyproject.toml` 文件。
 
 ## 数据集
 
@@ -114,6 +114,21 @@ python train_model.py
 - `yolo26n-cls.pt`：YOLO26n 分类模型
 - `yolo26s-cls.pt`：YOLO26s 分类模型
 
+## 训练后的模型权重
+
+训练完成后，模型权重会保存在 `weights/trained_weights/` 目录中，包括：
+
+- `yolo26n_flower_cls_model.pt`：基础 YOLO26n 花卉分类模型
+- `yolo26s_flower_cls_model.pt`：基础 YOLO26s 花卉分类模型
+- `yolo26n_CA_flower_cls_model.pt`：带有 CA 注意力机制的 YOLO26n 花卉分类模型
+- `yolo26n_CBAM_flower_cls_model.pt`：带有 CBAM 注意力机制的 YOLO26n 花卉分类模型
+- `yolo26n_ECA_flower_cls_model.pt`：带有 ECA 注意力机制的 YOLO26n 花卉分类模型
+- `yolo26n_GAM_flower_cls_model.pt`：带有 GAM 注意力机制的 YOLO26n 花卉分类模型
+- `yolo26n_SE_flower_cls_model.pt`：带有 SE 注意力机制的 YOLO26n 花卉分类模型
+- `yolo26n_SimAM_flower_cls_model.pt`：带有 SimAM 注意力机制的 YOLO26n 花卉分类模型
+- `yolo26s_CBAM_flower_cls_model.pt`：带有 CBAM 注意力机制的 YOLO26s 花卉分类模型
+- `yolo26s_SE_flower_cls_model.pt`：带有 SE 注意力机制的 YOLO26s 花卉分类模型
+
 ## 性能报告
 
 训练完成后，详细的性能报告将保存在 `performance_reports/` 目录中，包括：
@@ -180,16 +195,9 @@ Web应用使用数据库存储用户信息、识别历史和纠正信息。数�
 - 添加新的可视化效果
 - 优化用户界面
 
-## 参考
-
-- [Ultralytics YOLO](https://github.com/ultralytics/ultralytics)
-- [YOLO26: Next-Gen Real-Time Object Detection](https://docs.ultralytics.com/models/yolo26/)
-- [Flask Web Framework](https://flask.palletsprojects.com/)
 
 ## 联系方式
 
 如有问题或建议，请通过以下方式联系：
-
-- 项目维护者：Ultralytics Team
-- 官方文档：https://docs.ultralytics.com
-- GitHub 仓库：https://github.com/ultralytics/ultralytics
+- 项目维护者：LuvNarcisuss
+- GitHub 仓库：https://github.com/LuvNarcisuss/flower_classification.git

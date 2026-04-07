@@ -99,7 +99,7 @@ def train_model(model_name):
     # 训练参数
     train_params = {
         'data': str(dataset_path),        # 数据集目录，分类任务会自动读取子目录作为类别
-        'epochs': 200,                    # 训练轮数
+        'epochs': 300,                    # 训练轮数
         'batch': 16,                      # 批次大小
         'imgsz': 320,                     # 图像大小
         'device': device,                 # 使用GPU训练，更通用
@@ -197,23 +197,24 @@ def train_model(model_name):
     
 if __name__ == '__main__':
     freeze_support()  # 解决Windows下多进程问题
+    train_model('yolo26n-cls.yaml')
+    train_model('yolo26s-cls.yaml')
 
-    train_model('yolo26s-CBAM-cls.yaml')
     # 选择模型配置
-    yaml_files = ['yolo26-SE-cls.yaml',
-                  'yolo26-CBAM-cls.yaml',
-                  'yolo26-cls.yaml']
+    # yaml_files = ['yolo26-SE-cls.yaml',
+    #               'yolo26-CBAM-cls.yaml',
+    #               'yolo26-cls.yaml']
 
     # 选择模型类型 n, s, m, l, x
-    model_type = 's'
+    model_type = 'n'
 
-    # att_yaml_dir = Path(__file__).parent / 'ultralytics/cfg/models/26/Att_yaml'
-    #
-    # # 遍历目录中的所有分类模型的 yaml 文件
-    # yaml_files = [f.name for f in att_yaml_dir.iterdir()
-    #               if f.suffix.lower() == '.yaml'
-    #               and f.name.endswith('-cls.yaml')]
-    # print(f"找到 {len(yaml_files)} 个 YAML 配置文件:\n")
+    att_yaml_dir = Path(__file__).parent / 'ultralytics/cfg/models/26/Att_yaml'
+
+    # 遍历目录中的所有分类模型的 yaml 文件
+    yaml_files = [f.name for f in att_yaml_dir.iterdir()
+                  if f.suffix.lower() == '.yaml'
+                  and f.name.endswith('-cls.yaml')]
+    print(f"找到 {len(yaml_files)} 个 YAML 配置文件:\n")
 
     # 开始遍历训练每个模型
     for model_name in yaml_files:
@@ -222,4 +223,5 @@ if __name__ == '__main__':
                 'yolo26-', f'yolo26{model_type}-', 1)
         print(model_name)
         # 使用配置好的依赖训练模型
-        # train_model(model_name)
+        train_model(model_name)
+

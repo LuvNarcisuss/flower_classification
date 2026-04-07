@@ -94,21 +94,31 @@ class ModelPerformancePlotter:
         f1 = [m['F1 值'] for m in metrics]
         memory_usage = [m['内存使用 (MB)'] for m in metrics]
         
-        # 1. 准确率对比
+        # 1. 准确率对比（升序排列）
         plt.figure(figsize=(12, 8))
+        
+        # 按照Top-1准确率升序排序
+        sorted_models = sorted(zip(valid_model_names, top1_acc), key=lambda x: x[1])
+        sorted_model_names, sorted_top1_acc = zip(*sorted_models)
+        
+        # 重新排序其他指标数据
+        sorted_top5_acc = []
+        for model in sorted_model_names:
+            idx = valid_model_names.index(model)
+            sorted_top5_acc.append(top5_acc[idx])
         
         # 定义指标名称和颜色
         metrics_names = ['Top-1 准确率', 'Top-5 准确率']
-        metrics_data = [top1_acc, top5_acc]
-        colors = plt.cm.tab10(np.arange(len(valid_model_names)))
+        metrics_data = [sorted_top1_acc, sorted_top5_acc]
+        colors = plt.cm.tab10(np.arange(len(sorted_model_names)))
         
         # 设置条形图宽度
-        bar_width = 0.8 / len(valid_model_names)
+        bar_width = 0.8 / len(sorted_model_names)
         
         # 绘制每个指标的条形图
         for i, (metric_name, metric_data) in enumerate(zip(metrics_names, metrics_data)):
             # 为每个指标创建一组条形图
-            for j, (model_name, value) in enumerate(zip(valid_model_names, metric_data)):
+            for j, (model_name, value) in enumerate(zip(sorted_model_names, metric_data)):
                 # 计算每个模型在该指标组中的位置
                 x_pos = i + j * bar_width
                 plt.bar(x_pos, value, bar_width, color=colors[j], label=model_name if i == 0 else "")
@@ -118,7 +128,7 @@ class ModelPerformancePlotter:
         plt.ylabel('准确率')
         plt.title('不同注意力机制模型的准确率对比')
         # 调整x轴刻度位置和标签
-        plt.xticks(np.arange(len(metrics_names)) + bar_width * (len(valid_model_names) - 1) / 2, metrics_names)
+        plt.xticks(np.arange(len(metrics_names)) + bar_width * (len(sorted_model_names) - 1) / 2, metrics_names)
         
         # 添加图例
         plt.legend()
@@ -127,21 +137,35 @@ class ModelPerformancePlotter:
         plt.savefig(acc_plot_path)
         plt.close()
         
-        # 2. 分类性能指标对比
+        # 2. 分类性能指标对比（升序排列）
         plt.figure(figsize=(12, 8))
+        
+        # 按照准确率升序排序
+        sorted_models = sorted(zip(valid_model_names, accuracy), key=lambda x: x[1])
+        sorted_model_names, sorted_accuracy = zip(*sorted_models)
+        
+        # 重新排序其他指标数据
+        sorted_precision = []
+        sorted_recall = []
+        sorted_f1 = []
+        for model in sorted_model_names:
+            idx = valid_model_names.index(model)
+            sorted_precision.append(precision[idx])
+            sorted_recall.append(recall[idx])
+            sorted_f1.append(f1[idx])
         
         # 定义指标名称和颜色
         metrics_names = ['准确率', '精确率', '召回率', 'F1 值']
-        metrics_data = [accuracy, precision, recall, f1]
-        colors = plt.cm.tab10(np.arange(len(valid_model_names)))
+        metrics_data = [sorted_accuracy, sorted_precision, sorted_recall, sorted_f1]
+        colors = plt.cm.tab10(np.arange(len(sorted_model_names)))
         
         # 设置条形图宽度
-        bar_width = 0.8 / len(valid_model_names)
+        bar_width = 0.8 / len(sorted_model_names)
         
         # 绘制每个指标的条形图
         for i, (metric_name, metric_data) in enumerate(zip(metrics_names, metrics_data)):
             # 为每个指标创建一组条形图
-            for j, (model_name, value) in enumerate(zip(valid_model_names, metric_data)):
+            for j, (model_name, value) in enumerate(zip(sorted_model_names, metric_data)):
                 # 计算每个模型在该指标组中的位置
                 x_pos = i + j * bar_width
                 plt.bar(x_pos, value, bar_width, color=colors[j], label=model_name if i == 0 else "")
@@ -151,7 +175,7 @@ class ModelPerformancePlotter:
         plt.ylabel('指标值')
         plt.title('不同注意力机制模型的分类性能指标对比')
         # 调整x轴刻度位置和标签
-        plt.xticks(np.arange(len(metrics_names)) + bar_width * (len(valid_model_names) - 1) / 2, metrics_names)
+        plt.xticks(np.arange(len(metrics_names)) + bar_width * (len(sorted_model_names) - 1) / 2, metrics_names)
         
         # 添加图例
         plt.legend()
@@ -160,9 +184,12 @@ class ModelPerformancePlotter:
         plt.savefig(classification_plot_path)
         plt.close()
         
-        # 3. 速度对比
+        # 3. 速度对比（升序排列）
         plt.figure(figsize=(10, 6))
-        plt.bar(valid_model_names, fps, color='green')
+        # 按照FPS升序排序
+        sorted_speed = sorted(zip(valid_model_names, fps), key=lambda x: x[1])
+        sorted_model_names_speed, sorted_fps = zip(*sorted_speed)
+        plt.bar(sorted_model_names_speed, sorted_fps, color='green')
         plt.xlabel('模型')
         plt.ylabel('FPS')
         plt.title('不同注意力机制模型的推理速度对比')
@@ -172,9 +199,12 @@ class ModelPerformancePlotter:
         plt.savefig(speed_plot_path)
         plt.close()
         
-        # 4. 参数量对比
+        # 4. 参数量对比（升序排列）
         plt.figure(figsize=(10, 6))
-        plt.bar(valid_model_names, params_million, color='blue')
+        # 按照参数量升序排序
+        sorted_params = sorted(zip(valid_model_names, params_million), key=lambda x: x[1])
+        sorted_model_names_params, sorted_params_million = zip(*sorted_params)
+        plt.bar(sorted_model_names_params, sorted_params_million, color='blue')
         plt.xlabel('模型')
         plt.ylabel('参数量 (百万)')
         plt.title('不同注意力机制模型的参数量对比')
@@ -184,9 +214,12 @@ class ModelPerformancePlotter:
         plt.savefig(params_plot_path)
         plt.close()
         
-        # 5. 内存使用对比
+        # 5. 内存使用对比（升序排列）
         plt.figure(figsize=(10, 6))
-        plt.bar(valid_model_names, memory_usage, color='purple')
+        # 按照内存使用升序排序
+        sorted_memory = sorted(zip(valid_model_names, memory_usage), key=lambda x: x[1])
+        sorted_model_names_memory, sorted_memory_usage = zip(*sorted_memory)
+        plt.bar(sorted_model_names_memory, sorted_memory_usage, color='purple')
         plt.xlabel('模型')
         plt.ylabel('内存使用 (MB)')
         plt.title('不同注意力机制模型的内存使用对比')
@@ -201,14 +234,16 @@ class ModelPerformancePlotter:
         
         # 打印原始数据，便于调试
         print("\n雷达图原始数据:")
-        print(f"准确率: {accuracy}")
+        print(f"Top-1 准确率: {top1_acc}")
+        print(f"Top-5 准确率: {top5_acc}")
         print(f"精确率: {precision}")
         print(f"召回率: {recall}")
         print(f"F1值: {f1}")
         
-        # 准备雷达图数据，只使用准确率、精确率、召回率、F1值
+        # 准备雷达图数据，使用Top-1 准确率, Top-5 准确率, 精确率, 召回率, F1 值
         metrics_to_plot = {
-            '准确率': accuracy,
+            'Top-1 准确率': top1_acc,
+            'Top-5 准确率': top5_acc,
             '精确率': precision,
             '召回率': recall,
             'F1值': f1
@@ -222,14 +257,15 @@ class ModelPerformancePlotter:
         
         # 确保数据长度与模型数量一致
         print(f"\n模型数量: {len(valid_model_names)}")
-        print(f"数据长度 - 准确率: {len(accuracy)}")
+        print(f"数据长度 - Top-1 准确率: {len(top1_acc)}")
+        print(f"数据长度 - Top-5 准确率: {len(top5_acc)}")
         print(f"数据长度 - 精确率: {len(precision)}")
         print(f"数据长度 - 召回率: {len(recall)}")
         print(f"数据长度 - F1值: {len(f1)}")
         
         for i, model_name in enumerate(valid_model_names):
             # 确保索引不越界
-            if i < len(accuracy) and i < len(precision) and i < len(recall) and i < len(f1):
+            if i < len(top1_acc) and i < len(top5_acc) and i < len(precision) and i < len(recall) and i < len(f1):
                 values = [metrics_to_plot[metric][i] for metric in metrics_to_plot.keys()]
                 values += values[:1]  # 闭合
                 print(f"绘制模型 {model_name} 的雷达图数据: {values}")
@@ -242,7 +278,7 @@ class ModelPerformancePlotter:
         ax.set_xticklabels(list(metrics_to_plot.keys()))
         
         # 设置范围为0.6-1以增强对比
-        ax.set_ylim(0.6, 1)
+        ax.set_ylim(0.7, 1)
         plt.title('不同注意力机制模型的综合性能对比', size=15, y=1.1)
         plt.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
         radar_plot_path = output_dir / '不同注意力机制模型的综合性能对比.png'
@@ -261,18 +297,20 @@ if __name__ == '__main__':
     plotter = ModelPerformancePlotter(report_file)
 
     # 请根据实际情况修改以下列表，添加要对比的模型名称
-    # selected_models = [
-    #     'yolo26s_SE_flower_cls_model',
-    #     'yolo26s_CBAM_flower_cls_model',
-    #     'yolo26s_flower_cls_model'
-    # ]
+    selected_models = [
+        'yolo26s_CBAM_flower_cls',
+        'yolo26s_flower_cls',
+        'yolo26s_SE_flower_cls',
+        'yolo26s_SimAM_flower_cls'
 
-    selected_models = list(plotter.model_data.keys())
+    ]
 
-    print(f"从 CSV 文件读取到的模型名称列表:")
-    for model in selected_models:
-        print(f"  - {model}")
-    print(f"\n共{len(selected_models)}条模型数据")
+    # selected_models = list(plotter.model_data.keys())
+    #
+    # print(f"从 CSV 文件读取到的模型名称列表:")
+    # for model in selected_models:
+    #     print(f"  - {model}")
+    # print(f"\n共{len(selected_models)}条模型数据")
 
     
     print(f"\n要对比的模型: {selected_models}")
