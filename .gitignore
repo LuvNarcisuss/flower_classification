@@ -19,7 +19,6 @@ env/
 .claude/
 .playwright-cli/
 .superpowers/
-AGENTS.md
 CLAUDE.md
 
 # 本地输入和生成输出文件
@@ -40,5 +39,7 @@ Thumbs.db
 .idea/
 .vscode/
 
-# 文档文件
-docs/
+# 文档文件（docs/ 其余内容忽略；docs/agents/ 是技能配置，进版本库）
+docs/*
+!docs/agents/
+!docs/agents/**
